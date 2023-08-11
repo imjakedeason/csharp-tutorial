@@ -1,0 +1,14 @@
+C:\.kcppredavanje\bin\Debug\net7.0\.kcppredavanje.exe
+C:\.kcppredavanje\bin\Debug\net7.0\.kcppredavanje.deps.json
+C:\.kcppredavanje\bin\Debug\net7.0\.kcppredavanje.runtimeconfig.json
+C:\.kcppredavanje\bin\Debug\net7.0\.kcppredavanje.dll
+C:\.kcppredavanje\bin\Debug\net7.0\.kcppredavanje.pdb
+C:\.kcppredavanje\obj\Debug\net7.0\.kcppredavanje.GeneratedMSBuildEditorConfig.editorconfig
+C:\.kcppredavanje\obj\Debug\net7.0\.kcppredavanje.AssemblyInfoInputs.cache
+C:\.kcppredavanje\obj\Debug\net7.0\.kcppredavanje.AssemblyInfo.cs
+C:\.kcppredavanje\obj\Debug\net7.0\.kcppredavanje.csproj.CoreCompileInputs.cache
+C:\.kcppredavanje\obj\Debug\net7.0\.kcppredavanje.dll
+C:\.kcppredavanje\obj\Debug\net7.0\refint\.kcppredavanje.dll
+C:\.kcppredavanje\obj\Debug\net7.0\.kcppredavanje.pdb
+C:\.kcppredavanje\obj\Debug\net7.0\.kcppredavanje.genruntimeconfig.cache
+C:\.kcppredavanje\obj\Debug\net7.0\ref\.kcppredavanje.dll
