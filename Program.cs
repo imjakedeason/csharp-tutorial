@@ -2,41 +2,36 @@
 using System.Text.RegularExpressions;
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-string[] posao = new string[3] { "programer", "devops", "dizajner"};
-string[] ucenik = new string[3] { "Perica", "Ivica", "Lukica"};
-int[] ocjena = new int[3] { 2, 3, 5};
+string[] zanr = new string[] { "pop", "country", "rap", "indie", "alternative"};
 
-ucenik[1];
-ocjena[1];
+Pjesma_Taylor_Swift pjesma = new Pjesma_Taylor_Swift("Blank Space", "Taylor Swift", "Max Martin", "Shellback", "3:51", 2014, zanr[0], true);
 
-Person user = new Person("Željko", "Zvekić", 23, true, posao[0]); //objekt (također, mora biti iznad klase ako je u istom .cs)
-Person user2 = new Person("Jake", "Deason", 24, false, posao[2]); //definiramo podatak
+Console.WriteLine("**************************************************");
+Console.WriteLine("Ime pjesme: {0} {1}", pjesma.ime, pjesma.taylors_version);
+Console.WriteLine("Izvođač: {0}", pjesma.izvodac);
+Console.WriteLine("Producenti: {0}, {1}", pjesma.producent1, pjesma.producent2);
+Console.WriteLine("Trajanje pjesme: {0}", pjesma.trajanje);
+Console.WriteLine("Godina objavljivaja: {0}", pjesma.godina);
+Console.WriteLine("Žanr: {0}", pjesma.zanr);
 
-Console.WriteLine("**********************************************************");
-Console.WriteLine("Ime i prezime: {0} {1}", user.ime, user.prezime);
-Console.WriteLine("Dob: {0}", user.age);
-Console.WriteLine("Spol: {0}", user.gender ? "Muško" : "Žensko");
-Console.WriteLine("Posao: {0}", user.posao);
+class Pjesma_Taylor_Swift {
+    public string ime;
+    public string izvodac;
+    public string producent1;
+    public string producent2;
+    public string trajanje;
+    public int godina;
+    public string zanr;
+    public bool taylors_version;
 
-Console.WriteLine("**********************************************************");
-Console.WriteLine("Ime i prezime: {0} {1}", user2.ime, user2.prezime);
-Console.WriteLine("Dob: {0}", user2.age);
-Console.WriteLine("Spol: {0}", user2.gender ? "Muško" : "Žensko");
-Console.WriteLine("Posao: {0}", user2.posao);
-Console.WriteLine("**********************************************************");
-
-class Person {
-    public string ime; //private zabranjuje korištenje gore u console.writeline
-    public string prezime;
-    public int age;
-    public bool gender; // muško true, žensko false
-    public string posao;
-
-    public Person(string ime, string prezime, int age, bool gender, string posao) {
+    public Pjesma_Taylor_Swift(string ime, string, string izvodac, string producent1, string producent2,  string trajanje, int godina, string zanr, bool taylors_version) {
         this.ime = ime;
-        this.prezime = prezime;
-        this.age = age;
-        this.gender = gender;
-        this.posao = posao;
-    } 
+        this.izvodac = izvodac;
+        this.producent1 = producent1;
+        this.producent2 = producent2;
+        this.trajanje = trajanje;
+        this.godina = godina;
+        this.zanr = zanr;
+        this.taylors_version = taylors_version;
+        }
 }
