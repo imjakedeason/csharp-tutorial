@@ -11,7 +11,7 @@ PjesmaTaylorSwift pjesma4 = new PjesmaTaylorSwift("Enchanted", true, "Taylor Swi
 PjesmaTaylorSwift pjesma5 = new PjesmaTaylorSwift("...Ready For It?", false, "Taylor Swift", "Max Martin", "Shellback", "3:28", 2017, zanr[2]);
 
 Console.WriteLine("**************************************************");
-Console.WriteLine("Ime pjesme: {0} {1}", pjesma1.ime, pjesma1.taylorsversion ? "(Taylor's Version)" : "");
+Console.WriteLine("Ime pjesme: {0} {1}", pjesma1.ime, pjesma1.taylorsversion ? "(Taylor's Version)" : ""); 
 Console.WriteLine("Izvođač: {0}", pjesma1.izvodac);
 Console.WriteLine("Producenti: {0}, {1}", pjesma1.producent1, pjesma1.producent2);
 Console.WriteLine("Trajanje pjesme: {0}", pjesma1.trajanje);
@@ -52,7 +52,7 @@ Console.WriteLine("Žanr: {0}", pjesma5.zanr);
 
 class PjesmaTaylorSwift {
     public string ime;
-    public bool taylorsversion;
+    public bool taylorsversion; //Namješteno je kada je true, onda se pojavi tekst. Kada je false, onda se pojavi prazno.
     public string izvodac;
     public string producent1;
     public string producent2;
