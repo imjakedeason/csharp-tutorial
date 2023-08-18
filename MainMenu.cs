@@ -2,7 +2,7 @@ namespace Program {
     class MainMenu {
         private string zanClass;
         public string SimName() {
-            string? name;
+            string name;
             bool running = true;
             do {
                 // Ime Sima
@@ -19,22 +19,35 @@ namespace Program {
                     running = false;
                 }
             } while (running);
-            return zanClass;
+            return name;
         }
         public int SimAge() {
-            int? age;
+            int age;
             bool running = true;
             do {
                 // Godine Sima
                 Console.WriteLine("\n******************");
                 Console.WriteLine("\nUpišite godine Sima: ");
-                age = Console.ReadLine();
 
-                // Ako nema unosa, prekida se rad aplikacije
-                if (age == null || age == "") {
-                    Console.WriteLine("\nGreška prilikom unosa. Aplikacija će se zatvoriti.");
-                } else if
-            }
+                age = Convert.ToInt32(Console.ReadLine());
+
+                if (age < 0) {
+                    Console.WriteLine("\nNeodgovarajući iznos");
+                } else if (age < 2) {
+                    Console.WriteLine("\nBeba");
+                } else if (age < 13) {
+                    Console.WriteLine("\nDijete");
+                } else if (age < 18) {
+                    Console.WriteLine("\nTinejdžer");
+                } else if (age < 65) {
+                    Console.WriteLine("\nOdrasla osoba");
+                } else if (age >= 65) {
+                    Console.WriteLine("\nUmirovljenik");
+                } else {
+                    Console.WriteLine("\nNedozvoljeni unos. Probajte ponovo.");
+                }
+            } while (running);
+            return age;
         }
         public string ZanimanjeClass() {
             bool running = true;
@@ -51,7 +64,7 @@ namespace Program {
                 Console.WriteLine("\nUpišite broj klase zanimanja za vašeg Sima: ");
 
                 // Korisnik odabire klasu zanimanja
-                string? key = Console.ReadLine();
+                string key = Console.ReadLine();
                 int choice = key == "" ? 0 : int.Parse(key);
 
                 //Ako izbor nije 1-8, prekini rad aplikacije
@@ -107,8 +120,7 @@ namespace Program {
                     Console.WriteLine("\nNedozvoljeni unos. Probajte ponovo.");
                 }
             } while (running);
-
-            return (zanClass);
+            return zanClass;
         }
     }
 }
