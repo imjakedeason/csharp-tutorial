@@ -48,7 +48,7 @@ namespace Program {
                 }
             } while (running);
 
-            return charClass;
+            return name;
         }
     }
 }
