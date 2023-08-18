@@ -1,26 +1,49 @@
-﻿using System.Globalization;
-using System.Text.RegularExpressions;
-Console.OutputEncoding = System.Text.Encoding.UTF8;
+﻿namespace Program
+{
+    class Application
+    {
+        static void Main(string[] args){
+            MainMenu menu = new MainMenu();
+            string klasa = menu.CharacterClass();
+            string ime = menu.CharacterName();
 
-int[] brojevi = new int[4] { 2, 4, 6, 8 };
-int[] drugiBrojevi = new int[4] { 1, 3, 5, 7 };
-
-Mnozenje rezultat = new Mnozenje();
-rezultat.kvadriranje(brojevi);
-
-Mnozenje drugiRezultat = new Mnozenje();
-drugiRezultat.kvadriranje(drugiBrojevi);
-
-class Mnozenje {
-    public void kvadriranje(int[] data) {
-        Console.WriteLine("POCETAK");
-        foreach(int x in data) {
-            Console.WriteLine("Broj: " + x);
-            Console.WriteLine(x * x);
+            Character player = new Character(klasa, ime); // zelena boja označava klasu
+            player.print();
         }
-        Console.WriteLine("KRAJ");
     }
 }
+
+
+
+
+
+
+
+
+
+// using System.Globalization;
+// using System.Text.RegularExpressions;
+// Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+// int[] brojevi = new int[4] { 2, 4, 6, 8 };
+// int[] drugiBrojevi = new int[4] { 1, 3, 5, 7 };
+
+// Mnozenje rezultat = new Mnozenje();
+// rezultat.kvadriranje(brojevi);
+
+// Mnozenje drugiRezultat = new Mnozenje();
+// drugiRezultat.kvadriranje(drugiBrojevi);
+
+// class Mnozenje {
+//     public void kvadriranje(int[] data) {
+//         Console.WriteLine("POCETAK");
+//         foreach(int x in data) {
+//             Console.WriteLine("Broj: " + x);
+//             Console.WriteLine(x * x);
+//         }
+//         Console.WriteLine("KRAJ");
+//     }
+// }
 
 
 // string[] posao = new string[3] { "programer", "devops", "dizajner"};
