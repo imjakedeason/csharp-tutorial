@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\.kcppredavanje\\.kcppredavanje.csproj": {}
+    "C:\\.kcppredavanje\\.kcppredavanje.csproj": {}
   },
   "projects": {
-    "c:\\.kcppredavanje\\.kcppredavanje.csproj": {
+    "C:\\.kcppredavanje\\.kcppredavanje.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\.kcppredavanje\\.kcppredavanje.csproj",
+        "projectUniqueName": "C:\\.kcppredavanje\\.kcppredavanje.csproj",
         "projectName": ".kcppredavanje",
-        "projectPath": "c:\\.kcppredavanje\\.kcppredavanje.csproj",
+        "projectPath": "C:\\.kcppredavanje\\.kcppredavanje.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "c:\\.kcppredavanje\\obj\\",
+        "outputPath": "C:\\.kcppredavanje\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config"
