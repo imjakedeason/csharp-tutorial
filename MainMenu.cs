@@ -31,23 +31,17 @@ namespace Program {
         }
 
         public string CharacterName() {
-            string name;
-            bool running = true;
-            do {
-                // Ako je izbor u redu, pitaj igrača za ime lika
-                Console.WriteLine("\n****************************");
-                Console.WriteLine("\nUpišite ime vašeg lika: ");
-                name = Console.ReadLine();
+            // Ako je izbor u redu, pitaj igrača za ime lika
+            Console.WriteLine("\n****************************");
+            Console.WriteLine("\nUpišite ime vašeg lika: ");
+            string name = Console.ReadLine();
 
-                // Ako nema unosa, prekini rad aplikacije
-                if (name == null || name == "") {
-                    Console.WriteLine("\nGreška! Niste unijeli ime lika. Aplikacija će se zatvoriti.");
-                }
-                else {
-                    running = false;
-                }
-            } while (running);
-
+            // Ako nema unosa, prekini rad aplikacije
+            if (name == null || name == "") {
+                Console.WriteLine("\nGreška! Niste unijeli ime lika. Aplikacija će se zatvoriti.");
+                Environment.Exit(0);
+            }
+            
             return name;
         }
     }
