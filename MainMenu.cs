@@ -29,11 +29,10 @@ namespace Program {
                 Console.WriteLine("\n******************");
                 Console.WriteLine("\nUpišite godine Sima: ");
 
-                age = Convert.ToInt32(Console.ReadLine());
+                string agestring = Console.ReadLine();
+                age  = agestring == "" ? 0 : int.Parse(agestring);
 
-                if (age < 0) {
-                    Console.WriteLine("\nNeodgovarajući iznos");
-                } else if (age < 2) {
+                if (age < 2 && age > 0) {
                     Console.WriteLine("\nBeba");
                 } else if (age < 13) {
                     Console.WriteLine("\nDijete");
@@ -45,7 +44,9 @@ namespace Program {
                     Console.WriteLine("\nUmirovljenik");
                 } else {
                     Console.WriteLine("\nNedozvoljeni unos. Probajte ponovo.");
+                    break;
                 }
+                running = false;
             } while (running);
             return age;
         }
