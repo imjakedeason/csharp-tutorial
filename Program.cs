@@ -1,123 +1,184 @@
-﻿﻿namespace Program {
-    class Application {
-        static void Main(string[] args) {
-            MainMenu menu = new MainMenu();
-            string klasa =menu.CharacterClass();
-            string ime = menu.CharacterName();
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 
-            Character player = new Character(klasa, ime);
-            player.print();
+namespace Program {
+    class Program {
+        static List<Product> storeProducts = new List<Product>();
+        static PaymentMethod selectedPaymentMethod;
 
-            BattleManager battle = new BattleManager();
-            battle.startBattle(player);
+        static void Main(string[] args) // main menu 
+        {
+            Store();
+
+            while (true)
+            {
+                Console.WriteLine("***********************************");
+                Console.WriteLine("Izbornik:");
+                Console.WriteLine("***********************************");
+                Console.WriteLine("1. Popis proizvoda");
+                Console.WriteLine("2. Dodaj novi proizvod");
+                Console.WriteLine("3. Kupi proizvod");
+                Console.WriteLine("4. Izlaz iz aplikacije");
+                Console.WriteLine("***********************************");
+                Console.Write("Unesite svoj izbor: ");
+
+                if (int.TryParse(Console.ReadLine(), out int choice))
+                {
+                    switch (choice)
+                    {
+                        case 1:
+                            ListProducts();
+                            break;
+                        case 2:
+                            AddProduct();
+                            break;
+                        case 3:
+                            BuyProduct();
+                            break;
+                        case 4:
+                            Console.WriteLine("Izlazim iz programa.");
+                            return;
+                        default:
+                            Console.WriteLine("Pogrešan izbor. Pokušajte ponovno.");
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Pogrešan unos. Unesite valjanu opciju.");
+                }
+            }
+        }
+
+        static void Store()
+        {
+            storeProducts.Add(new Product { ProductNumber = 1, Name = "Sušilo za kosu", Price = 10.80, Quantity = 14 });
+            storeProducts.Add(new Product { ProductNumber = 2, Name = "Mikrovalna", Price = 15.40, Quantity = 6 });
+            storeProducts.Add(new Product { ProductNumber = 3, Name = "Hladnjak", Price = 22.60, Quantity = 30 });
+            storeProducts.Add(new Product { ProductNumber = 4, Name = "Lampa za stol", Price = 5.10, Quantity = 14 });
+        }
+
+        static void ListProducts() // lista proizvoda
+        {
+            Console.WriteLine("***********************************");
+            Console.WriteLine("Proizvodi u trgovini:");
+            Console.WriteLine("***********************************");
+            Console.WriteLine("Broj\tIme proizvoda\t\tCijena\t\tKoličina");
+
+            foreach (var product in storeProducts)
+            {
+                Console.WriteLine($"{product.ProductNumber}\t{product.Name}\t\t{product.Price}\t\t{product.Quantity}");
+            }
+
+            Console.WriteLine("***********************************");
+            Console.WriteLine("Pritisnite Enter za nastavak.");
+            Console.ReadLine();
+        }
+
+        static void AddProduct() // dodaj proizvode
+        {
+            Console.WriteLine("\n***********************************");
+            Console.Write("Unesite ime proizvoda: ");
+            string name = Console.ReadLine();
+
+            Console.WriteLine("\n***********************************");
+            Console.Write("Unesite cijenu novog proizvoda: ");
+            if (double.TryParse(Console.ReadLine(), out double price))
+            {
+                Console.WriteLine("\n***********************************");
+                Console.Write("Unesite količinu novog proizvoda: ");
+                if (int.TryParse(Console.ReadLine(), out int quantity))
+                {
+                    int productNumber = storeProducts.Count + 1;
+                    storeProducts.Add(new Product { ProductNumber = productNumber, Name = name, Price = price, Quantity = quantity });
+                    Console.WriteLine($"Proizvod '{name}' dodan je u trgovinu.");
+                }
+                else
+                {
+                    Console.WriteLine("Neodgovarajuća količina. Unesite valjani broj.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Neodgovarajuća cijena. Unesite valjani broj.");
+            }
+        }
+
+        static void BuyProduct() // kupovina proizvoda
+        {
+            Console.WriteLine("\n***********************************");
+            Console.WriteLine("Kupovina proizvoda:");
+            ListProducts();
+
+            Console.WriteLine("***********************************");
+            Console.Write("Unesite broj proizvoda koji želite kupiti (0 za nazad): ");
+            if (int.TryParse(Console.ReadLine(), out int productNumber) && productNumber > 0 && productNumber <= storeProducts.Count)
+            {
+                Product selectedProduct = storeProducts[productNumber - 1];
+
+                Console.WriteLine("***********************************");
+                Console.Write($"Unesite količinu proizvoda '{selectedProduct.Name}' koju želite kupiti (0 za nazad): ");
+                if (int.TryParse(Console.ReadLine(), out int quantity) && quantity >= 0)
+                {
+                    if (quantity <= selectedProduct.Quantity)
+                    {
+                        Console.WriteLine("\n***********************************");
+                        Console.WriteLine($"Ukupni iznos za {quantity} '{selectedProduct.Name}' je: {selectedProduct.Price * quantity}");
+
+                        Console.WriteLine("\n***********************************");
+                        Console.WriteLine("Odaberite način plaćanja:");
+                        Console.WriteLine("***********************************");
+                        Console.WriteLine("1. Kreditna kartica");
+                        Console.WriteLine("2. Gotovina");
+                        Console.WriteLine("3. Ček");
+                        Console.WriteLine("***********************************");
+                        Console.Write("Unesite svoj izbor plaćanja: ");
+
+                        if (int.TryParse(Console.ReadLine(), out int paymentChoice))
+                        {
+                            switch (paymentChoice)
+                            {
+                                case 1:
+                                    selectedPaymentMethod = new CashPayment();
+                                    break;
+                                case 2:
+                                    selectedPaymentMethod = new CreditCardPayment();
+                                    break;
+                                default:
+                                    Console.WriteLine("Nevažeći izbor plaćanja. Plaćanje otkazano.");
+                                    return;
+                            }
+
+                            selectedPaymentMethod.MakePayment(selectedProduct.Price * quantity);
+                            selectedProduct.Quantity -= quantity;
+                            Console.WriteLine($"Uspješno ste kupili {quantity} '{selectedProduct.Name}'.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Nevažeći izbor plaćanja. Plaćanje otkazano.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Nedovoljna količina'{selectedProduct.Name}' u trgovini.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Nevažeća količina. Unesite važeći broj.");
+                }
+            }
+            else if (productNumber == 0)
+            {
+                // odlazak nazad u main menu
+            }
+            else
+            {
+                Console.WriteLine("Nevažeći broj proizvoda. Unesite važeći broj.");
+            }
         }
     }
 }
-
-
-
-
-
-
-
-
-
-// using System.Globalization;
-// using System.Text.RegularExpressions;
-// Console.OutputEncoding = System.Text.Encoding.UTF8;
-
-// int[] brojevi = new int[4] { 2, 4, 6, 8 };
-// int[] drugiBrojevi = new int[4] { 1, 3, 5, 7 };
-
-// Mnozenje rezultat = new Mnozenje();
-// rezultat.kvadriranje(brojevi);
-
-// Mnozenje drugiRezultat = new Mnozenje();
-// drugiRezultat.kvadriranje(drugiBrojevi);
-
-// class Mnozenje {
-//     public void kvadriranje(int[] data) {
-//         Console.WriteLine("POCETAK");
-//         foreach(int x in data) {
-//             Console.WriteLine("Broj: " + x);
-//             Console.WriteLine(x * x);
-//         }
-//         Console.WriteLine("KRAJ");
-//     }
-// }
-
-
-// string[] posao = new string[3] { "programer", "devops", "dizajner"};
-// string[] ucenik = new string[3] { "Perica", "Ivica", "Lukica"};
-// int[] ocjena = new int[3] { 2, 3, 5};
-
-// Person user = new Person("Željko", "Zvekić", 23, true, posao[0]); //objekt (također, mora biti iznad klase ako je u istom .cs)
-// Person user2 = new Person("Jake", "Deason", 24, false, posao[2]); //definiramo podatak
-// Person user3 = new Person("Pero", "Perić", 30, false, posao[1]); 
-// Person user4 = new Person("Marko", "Marić", 41, false, posao[1]); 
-// Person user5 = new Person("Domi", "Marić", 19, false, posao[1]); 
-
-// List<Person> userList = new List<Person>();
-// List<Person> userList2 = new List<Person>();
-
-// userList.Add(user);
-// userList.Add(user2);
-// userList.Add(user3);
-
-// userList2.Add(user4);
-// userList2.Add(user5);
-
-// PrintUser print = new PrintUser();
-// print.printUsers(userList);
-// print.printUsers(userList2);
-
-// // Console.WriteLine("**********************************************************");
-// // Console.WriteLine("Ime i prezime: {0} {1}", user.ime, user.prezime);
-// // Console.WriteLine("Dob: {0}", user.age);
-// // Console.WriteLine("Spol: {0}", user.gender ? "Muško" : "Žensko");
-// // Console.WriteLine("Posao: {0}", user.posao);
-
-// // Console.WriteLine("**********************************************************");
-// // Console.WriteLine("Ime i prezime: {0} {1}", user2.ime, user2.prezime);
-// // Console.WriteLine("Dob: {0}", user2.age);
-// // Console.WriteLine("Spol: {0}", user2.gender ? "Muško" : "Žensko");
-// // Console.WriteLine("Posao: {0}", user2.posao);
-// // Console.WriteLine("**********************************************************");
-
-// class Person {
-//     public string ime; //private zabranjuje korištenje gore u console.writeline
-//     public string prezime;
-//     public int age;
-//     public bool gender; // muško true, žensko false
-//     public string posao;
-
-//     public Person(string ime, string prezime, int age, bool gender, string posao) {
-//         this.ime = ime;
-//         this.prezime = prezime;
-//         this.age = age;
-//         this.gender = gender;
-//         this.posao = posao;
-//     }
-// }
-
-// class PrintUser {
-//     public void printUsers(List<Person> users) {
-//         // //foreach loop
-//         // users.ForEach(x => {
-//         //     Console.WriteLine("**********************************************************");
-//         //     Console.WriteLine("Ime i prezime: {0} {1}", x.ime, x.prezime);
-//         //     Console.WriteLine("Dob: {0}", x.age);
-//         //     Console.WriteLine("Spol: {0}", x.gender ? "Muško" : "Žensko");
-//         //     Console.WriteLine("Posao: {0}", x.posao);
-//         // });
-
-//         foreach(Person x in users) {
-//             Console.WriteLine("**********************************************************");
-//             Console.WriteLine("Ime i prezime: {0} {1}", x.ime, x.prezime);
-//             Console.WriteLine("Dob: {0}", x.age);
-//             Console.WriteLine("Spol: {0}", x.gender ? "Muško" : "Žensko");
-//             Console.WriteLine("Posao: {0}", x.posao);
-//         }
-//     } 
-// }
