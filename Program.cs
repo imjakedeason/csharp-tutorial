@@ -126,11 +126,11 @@ namespace Program {
                     if (quantity <= selectedProduct.Quantity)
                     {
                         Console.WriteLine("\n***********************************");
-                        Console.WriteLine($"Ukupni iznos za {quantity} '{selectedProduct.Name}' je: {selectedProduct.Price * quantity}");
+                        Console.WriteLine($"Ukupni iznos bez PDV-a za {quantity} '{selectedProduct.Name}' je: {selectedProduct.Price * quantity}");
 
-                        Console.WriteLine("\n***********************************");
+                        Console.WriteLine("-----------------------------------");
                         Console.WriteLine("Odaberite način plaćanja:");
-                        Console.WriteLine("***********************************");
+                        Console.WriteLine("-----------------------------------");
                         Console.WriteLine("1. Kreditna kartica");
                         Console.WriteLine("2. Gotovina");
                         Console.WriteLine("3. Ček");
@@ -142,16 +142,25 @@ namespace Program {
                             switch (paymentChoice)
                             {
                                 case 1:
-                                    selectedPaymentMethod = new CashPayment();
+                                    selectedPaymentMethod = new CreditCardPayment();
                                     break;
                                 case 2:
-                                    selectedPaymentMethod = new CreditCardPayment();
+                                    selectedPaymentMethod = new CashPayment();
+                                    break;
+                                case 3:
+                                    selectedPaymentMethod = new CheckPayment();
                                     break;
                                 default:
                                     Console.WriteLine("Nevažeći izbor plaćanja. Plaćanje otkazano.");
                                     return;
                             }
-
+                            Console.WriteLine("***********************************");
+                            // kupili ste proizvod xyz
+                            Console.WriteLine("-----------------------------------");
+                            Console.WriteLine("<<<<< Račun >>>>>");
+                            Console.WriteLine("-----------------------------------");
+                            Console.WriteLine($"Ime proizvoda: '{selectedProduct.Name}'");
+                            Console.WriteLine("-----------------------------------");
                             selectedPaymentMethod.MakePayment(selectedProduct.Price * quantity);
                             selectedProduct.Quantity -= quantity;
                             Console.WriteLine($"Uspješno ste kupili {quantity} '{selectedProduct.Name}'.");
