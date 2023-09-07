@@ -5,56 +5,6 @@ using System.Text.RegularExpressions;
 
 namespace Program
 {
-    class Product
-    {
-        public int ProductNumber { get; set; }
-        public string? Name { get; set; }
-        public decimal Price { get; set; }
-        public int Quantity { get; set; }
-        public PaymentMethod? SelectedPaymentMethod { get; set; }
-        public IDelivery? SelectedDeliveryMethod { get; set; }
-    }
-
-    abstract class PaymentMethod
-    {
-        public abstract string Name { get; }
-    }
-
-    class CreditCardPayment : PaymentMethod
-    {
-        public override string Name => "Kreditna kartica";
-    }
-
-    class CashPayment : PaymentMethod
-    {
-        public override string Name => "Gotovina";
-    }
-
-    class CheckPayment : PaymentMethod
-    {
-        public override string Name => "Ček";
-    }
-
-    interface IDelivery
-    {
-        string Name { get; }
-    }
-
-    class PickupDelivery : IDelivery
-    {
-        public string Name => "Osobno preuzimanje";
-    }
-
-    class PostDelivery : IDelivery
-    {
-        public string Name => "Dostava poštom";
-    }
-
-    class CourierDelivery : IDelivery
-    {
-        public string Name => "Dostava kurirskom službom";
-    }
-
     class Program
     {
         static List<Product> storeProducts = new List<Product>
