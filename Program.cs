@@ -3,29 +3,79 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
+namespace Program
+{
+    class Product
+    {
+        public int ProductNumber { get; set; }
+        public string? Name { get; set; }
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
+        public PaymentMethod? SelectedPaymentMethod { get; set; }
+        public IDelivery? SelectedDeliveryMethod { get; set; }
+    }
 
-namespace Program {
+    abstract class PaymentMethod
+    {
+        public abstract string Name { get; }
+    }
+
+    class CreditCardPayment : PaymentMethod
+    {
+        public override string Name => "Kreditna kartica";
+    }
+
+    class CashPayment : PaymentMethod
+    {
+        public override string Name => "Gotovina";
+    }
+
+    class CheckPayment : PaymentMethod
+    {
+        public override string Name => "Ček";
+    }
+
+    interface IDelivery
+    {
+        string Name { get; }
+    }
+
+    class PickupDelivery : IDelivery
+    {
+        public string Name => "Osobno preuzimanje";
+    }
+
+    class PostDelivery : IDelivery
+    {
+        public string Name => "Dostava poštom";
+    }
+
+    class CourierDelivery : IDelivery
+    {
+        public string Name => "Dostava kurirskom službom";
+    }
+
     class Program
     {
         static List<Product> storeProducts = new List<Product>
         {
-            new Product { ProductNumber = 1, Name = "Sušilo za kosu", Price = 10.80, Quantity = 14 },
-            new Product { ProductNumber = 2, Name = "Mikrovalna", Price = 15.40, Quantity = 6 },
-            new Product { ProductNumber = 3, Name = "Hladnjak", Price = 22.60, Quantity = 30 },
-            new Product { ProductNumber = 4, Name = "Lampa za stol", Price = 5.10, Quantity = 14 }
+            new Product { ProductNumber = 1, Name = "Sušilo za kosu", Price = 10.80m, Quantity = 140 },
+            new Product { ProductNumber = 2, Name = "Mikrovalna", Price = 15.40m, Quantity = 360 },
+            new Product { ProductNumber = 3, Name = "Hladnjak", Price = 22.60m, Quantity = 430 },
+            new Product { ProductNumber = 4, Name = "Lampa za stol", Price = 20.40m, Quantity = 840 }
         };
 
         static void Main(string[] args)
         {
             while (true)
             {
-                Console.WriteLine("Trgovina:");
+                Console.WriteLine(">>>>>>>>>> Trgovina: <<<<<<<<<<");
                 Console.WriteLine("1. Popis proizvoda");
                 Console.WriteLine("2. Dodaj novi proizvod");
                 Console.WriteLine("3. Kupi proizvod");
                 Console.WriteLine("4. Izlaz iz aplikacije");
 
-                int choice = GetChoice(1, 3);
+                int choice = GetChoice(1, 4);
 
                 switch (choice)
                 {
@@ -45,32 +95,32 @@ namespace Program {
             }
         }
 
-        static void ListAllProducts() // izlistaj proizvode
+        static void ListAllProducts()
         {
-            Console.WriteLine("Available Products:");
+            Console.WriteLine(">>>>>>>>>> Dostupni proizvodi: <<<<<<<<<<");
             foreach (var product in storeProducts)
             {
-                Console.WriteLine($"{product.ProductNumber}. {product.Name} - ${product.Price} (Qty: {product.Quantity})");
+                Console.WriteLine($"{product.ProductNumber}. {product.Name} - {product.Price} EUR (Kol: {product.Quantity})");
             }
         }
 
-        static void AddProduct() // dodaj proizvode
+        static void AddProduct()
         {
-            Console.WriteLine("\n***********************************");
-            Console.Write("Unesite ime proizvoda: ");
+            Console.WriteLine("***********************************");
+            Console.Write(">>>>> Unesite ime proizvoda: ");
             string name = Console.ReadLine();
 
-            Console.WriteLine("\n***********************************");
-            Console.Write("Unesite cijenu novog proizvoda: ");
-            if (double.TryParse(Console.ReadLine(), out double price))
+            Console.WriteLine("***********************************");
+            Console.Write(">>>>> Unesite cijenu za novi proizvod: ");
+            if (decimal.TryParse(Console.ReadLine(), out decimal price))
             {
-                Console.WriteLine("\n***********************************");
-                Console.Write("Unesite količinu novog proizvoda: ");
+                Console.WriteLine("***********************************");
+                Console.Write(">>>>> Unesite količinu na stanju za novi proizvod: ");
                 if (int.TryParse(Console.ReadLine(), out int quantity))
                 {
                     int productNumber = storeProducts.Count + 1;
                     storeProducts.Add(new Product { ProductNumber = productNumber, Name = name, Price = price, Quantity = quantity });
-                    Console.WriteLine($"Proizvod '{name}' dodan je u trgovinu.");
+                    Console.WriteLine($"Novi proizvod je dodan u trgovinu pod nazivom: '{name}'");
                 }
                 else
                 {
@@ -83,10 +133,12 @@ namespace Program {
             }
         }
 
-        static void BuyProduct() // kupovina
+        static void BuyProduct()
         {
             ListAllProducts();
-            Console.WriteLine("0. Return to Main Menu");
+            Console.WriteLine("***********************************");
+            Console.Write($"Odaberite proizvod koji želite kupiti: ");
+            Console.WriteLine("\nZa povratak nazad u Izbornik, unesite '0'.");
 
             int choice = GetChoice(0, storeProducts.Count);
 
@@ -94,41 +146,30 @@ namespace Program {
                 return;
 
             Product selectedProduct = storeProducts[choice - 1];
-            Console.WriteLine($"You selected: {selectedProduct.Name} - ${selectedProduct.Price}");
+            Console.WriteLine($">>>>> Izabrali ste proizvod: ");
+            Console.WriteLine($"{selectedProduct.Name} - {selectedProduct.Price} EUR | {selectedProduct.Quantity}");
 
-            BuyProductQuantity(selectedProduct);
-            selectedProduct.SelectedPaymentMethod = null;
-            BuyProductPayment(selectedProduct);
-            BuyProductDelivery(selectedProduct);
-        }
+            Console.WriteLine("***********************************");
+            Console.Write($"Unesite količinu proizvoda koju želite kupiti: ");
+            int selectedQuantity = GetChoice(0, selectedProduct.Quantity);
 
-        static void BuyProductQuantity(Product product)
-        {
-            Console.Write($"Enter the quantity you want to buy (0 to return to Main Menu): ");
-            int quantity = GetChoice(0, product.Quantity);
-
-            if (quantity == 0)
+            if (selectedQuantity == 0)
                 return;
 
-            if (quantity > product.Quantity)
+            if (selectedQuantity > selectedProduct.Quantity)
             {
-                Console.WriteLine("Invalid quantity. Please try again.");
-                BuyProductQuantity(product);
+                Console.WriteLine("Neodgovarajuća količina. Pokušajte ponovno.");
                 return;
             }
-        }
 
-        static void BuyProductPayment(Product selectedProduct)
-        {
-            Console.WriteLine("Choose Payment Method:");
-            Console.WriteLine("1. Credit Card");
-            Console.WriteLine("2. Cash");
-            Console.WriteLine("3. Check");
-            Console.WriteLine("0. Return to Main Menu");
+            Console.WriteLine("Odaberite vrstu plaćanja:");
+            Console.WriteLine("1. Kreditna kartica");
+            Console.WriteLine("2. Gotovina");
+            Console.WriteLine("3. Ček");
 
-            int choice = GetChoice(0, 3);
+            int paymentChoice = GetChoice(0, 3);
 
-            switch (choice)
+            switch (paymentChoice)
             {
                 case 1:
                     selectedProduct.SelectedPaymentMethod = new CreditCardPayment();
@@ -142,117 +183,97 @@ namespace Program {
                 default:
                     break;
             }
-        }
+            Console.WriteLine($"Odabrali ste sljedeći naćin plaćanja: {selectedProduct.SelectedPaymentMethod.Name}");
 
-        static void BuyProductDelivery(Product product)
-        {
-            Console.WriteLine("Choose Delivery Method:");
-            Console.WriteLine("1. Pickup Delivery");
-            Console.WriteLine("2. Post Delivery");
-            Console.WriteLine("3. Courier Delivery");
-            Console.WriteLine("0. Return to Main Menu");
+            Console.WriteLine(">>>>> Odaberite način dostave:");
+            Console.WriteLine("1. Osobno preuzimanje");
+            Console.WriteLine("2. Dostava poštom");
+            Console.WriteLine("3. Dostava kurirskom službom");
 
-            int choice = GetChoice(0, 3);
+            int deliveryChoice = GetChoice(0, 3);
 
-            switch (choice)
+            string senderName = "Meredith Swift Inc.";
+            string senderAddress = "Ulica sezam 13, 1989 Red City";
+            DateTime currentDate = DateTime.Now;
+            string deliveryDate = currentDate.AddMonths(1).ToString("dd.MM.yyyy");
+            string duePickupDate = "-";
+
+            string receiverName = "-";
+            string receiverAddress = "-";
+            string receiverNumber = "-";
+            string courierName = "-";
+            string courierAddress = "-";
+
+            switch (deliveryChoice)
             {
                 case 1:
-                    {
-                    Console.Write("Receiver Name: ");
-                    string receiverName = Console.ReadLine();
-
-                    Console.Write("Receiver Number: ");
-                    string receiverNumber = Console.ReadLine();
-
-                    Console.Write("Sender Name: ");
-                    string senderName = Console.ReadLine();
-
-                    Console.Write("Sender Address: ");
-                    string senderAddress = Console.ReadLine();
-
-                    Console.Write("Due Pickup Date: ");
-                    string duePickupDate = Console.ReadLine();
-
-                    GenerateReceipt(product, "Pickup Delivery", receiverName, receiverNumber, senderName, senderAddress, duePickupDate);
+                    selectedProduct.SelectedDeliveryMethod = new PickupDelivery();
+                    Console.Write(">>>>> Ime primatelja: ");
+                    receiverName = Console.ReadLine();
+                    Console.Write(">>>>> Telefonski broj primatelja: ");
+                    receiverNumber = Console.ReadLine();
+                    deliveryDate = "-";
+                    duePickupDate = currentDate.AddMonths(2).ToString("dd.MM.yyyy");
                     break;
-                    }
                 case 2:
-                    {
-                    Console.Write("Receiver Name: ");
-                    string receiverName = Console.ReadLine();
-
-                    Console.Write("Receiver Number: ");
-                    string receiverNumber = Console.ReadLine();
-
-                    Console.Write("Sender Name: ");
-                    string senderName = Console.ReadLine();
-
-                    Console.Write("Sender Address: ");
-                    string senderAddress = Console.ReadLine();
-
-                    Console.Write("Delivery Date: ");
-                    string deliveryDate = Console.ReadLine();
-
-                    GenerateReceipt(product, "Post Delivery", receiverName, receiverNumber, senderName, senderAddress, deliveryDate);
+                    selectedProduct.SelectedDeliveryMethod = new PostDelivery();
+                    Console.Write(">>>>> Ime primatelja: ");
+                    receiverName = Console.ReadLine();
+                    Console.Write(">>>>> Adresa primatelja: ");
+                    receiverAddress = Console.ReadLine();
+                    Console.Write(">>>>> Telefonski broj primatelja: ");
+                    receiverNumber = Console.ReadLine();
                     break;
-                    }
                 case 3:
-                    {
-                    Console.Write("Receiver Name: ");
-                    string receiverName = Console.ReadLine();
-
-                    Console.Write("Receiver Number: ");
-                    string receiverNumber = Console.ReadLine();
-
-                    Console.Write("Sender Name: ");
-                    string senderName = Console.ReadLine();
-
-                    Console.Write("Sender Address: ");
-                    string senderAddress = Console.ReadLine();
-
-                    Console.Write("Delivery Date: ");
-                    string deliveryDate = Console.ReadLine();
-
-                    Console.Write("Courier Name: ");
-                    string courierName = Console.ReadLine();
-
-                    Console.Write("Courier Address: ");
-                    string courierAddress = Console.ReadLine();
-
-                    GenerateReceipt(product, "Courier Delivery", receiverName, receiverNumber, senderName, senderAddress, deliveryDate, courierName, courierAddress);
+                    selectedProduct.SelectedDeliveryMethod = new CourierDelivery();
+                    Console.Write(">>>>> Ime primatelja: ");
+                    receiverName = Console.ReadLine();
+                    Console.Write(">>>>> Adresa primatelja: ");
+                    receiverAddress = Console.ReadLine();
+                    Console.Write(">>>>> Telefonski broj primatelja: ");
+                    receiverNumber = Console.ReadLine();
+                    courierName = "Olivia Swift Express";
+                    courierAddress = "Benjamin Street 7, 1989 Red City";
                     break;
-                    }
                 default:
                     break;
             }
-        }
 
-        static void GenerateReceipt(Product product, string deliveryMethod, string receiverName, string receiverNumber, string senderName, string senderAddress, string deliveryOrPickupDate, string courierName = "", string courierAddress = "")
-        {
-            Console.WriteLine("Receipt:");
-            Console.WriteLine($"Product: {product.Name}");
-            Console.WriteLine($"Unit Price: ${product.Price}");
-            double totalWithoutVAT = product.Price;
-            Console.WriteLine($"Total without VAT: ${totalWithoutVAT}");
-            double vatPercentage = 0.20; // Assuming a VAT of 20%
-            double vatPrice = totalWithoutVAT * vatPercentage;
-            Console.WriteLine($"VAT ({vatPercentage * 100}%): ${vatPrice}");
-            double totalWithVAT = totalWithoutVAT + vatPrice;
-            Console.WriteLine($"Total with VAT: ${totalWithVAT}");
-            Console.WriteLine($"Payment Method: {product.SelectedPaymentMethod}");
-            Console.WriteLine($"Delivery Method: {deliveryMethod}");
-            Console.WriteLine($"Receiver Name: {receiverName}");
-            Console.WriteLine($"Receiver Number: {receiverNumber}");
-            Console.WriteLine($"Sender Name: {senderName}");
-            Console.WriteLine($"Sender Address: {senderAddress}");
-            Console.WriteLine($"Delivery/Pickup Date: {deliveryOrPickupDate}");
-            if (!string.IsNullOrEmpty(courierName) && !string.IsNullOrEmpty(courierAddress))
-            {
-                Console.WriteLine($"Courier Name: {courierName}");
-                Console.WriteLine($"Courier Address: {courierAddress}");
-            }
+            Console.WriteLine($"Odabrali ste sljedeći naćin dostave: {selectedProduct.SelectedDeliveryMethod.Name}");
 
-            // Return to the Main Menu
+            // Receipt
+
+            Console.WriteLine("**************************************************");
+            Console.WriteLine(">>>>>>>>>> Račun: <<<<<<<<<<");
+            Console.WriteLine($"Proizvod: {selectedProduct.Name} Količina: {selectedQuantity}");
+            decimal totalWithoutVAT = selectedProduct.Price * selectedQuantity;
+            Console.WriteLine($"Cijena: {selectedProduct.Price} EUR | Iznos: {totalWithoutVAT} EUR");
+            decimal vatPercentage = 0.20m; // PDV je 20%
+            decimal vatPrice = totalWithoutVAT * vatPercentage;
+            Console.WriteLine($"PDV ({vatPercentage * 100}%): {vatPrice} EUR");
+            decimal totalWithVAT = totalWithoutVAT + vatPrice;
+            Console.WriteLine("***********************************");
+            Console.WriteLine($"Iznos s PDV-om: {totalWithVAT} EUR");
+            Console.WriteLine("***********************************");
+            Console.WriteLine($"Način plaćanja: {selectedProduct.SelectedPaymentMethod.Name}");
+            Console.WriteLine($"Način dostave: {selectedProduct.SelectedDeliveryMethod.Name}");
+            Console.WriteLine($">>> Ime pošaljitelja: {senderName}");
+            Console.WriteLine($">>> Adresa pošaljitelja: {senderAddress}");
+            Console.WriteLine($">>> Datum dostave: {deliveryDate}");
+            Console.WriteLine($">>> Ime primatelja: {receiverName}");
+            Console.WriteLine($">>> Adresa primatelja: {receiverAddress}");
+            Console.WriteLine($">>> Krajnji datum preuzimanja: {duePickupDate}");
+            Console.WriteLine($">>> Telefonski broj primatelja: {receiverNumber}");
+            Console.WriteLine($">>> Ime kurira: {courierName}");
+            Console.WriteLine($">>> Adresa kurirske službe: {courierAddress}");
+
+            Console.WriteLine("**************************************************");
+            Console.WriteLine("Hvala Vam na kupovini!");
+
+            selectedProduct.Quantity -= selectedQuantity;
+
+            Console.WriteLine(">>>>> Pritisnite Enter za nastavak.");
+            Console.ReadLine();
         }
 
         static int GetChoice(int min, int max)
@@ -260,14 +281,9 @@ namespace Program {
             int choice;
             while (!int.TryParse(Console.ReadLine(), out choice) || choice < min || choice > max)
             {
-                Console.WriteLine("Invalid input. Please try again.");
+                Console.WriteLine("Pogrešan unos. Pokušajte ponovno.");
             }
             return choice;
         }
     }
 }
-
-
-// postavi sender info... 
-// povećaj količine
-// napravi da bude lijepo
