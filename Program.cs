@@ -17,6 +17,7 @@ namespace Program
 
         static void Main(string[] args)
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
             while (true)
             {
                 Console.WriteLine(">>>>>>>>>> Trgovina: <<<<<<<<<<");
@@ -50,7 +51,7 @@ namespace Program
             Console.WriteLine(">>>>>>>>>> Dostupni proizvodi: <<<<<<<<<<");
             foreach (var product in storeProducts)
             {
-                Console.WriteLine($"{product.ProductNumber}. {product.Name} - {product.Price} EUR (Kol: {product.Quantity})");
+                Console.WriteLine($"{product.ProductNumber}. {product.Name} - {product.Price} € (Kol: {product.Quantity})");
             }
         }
 
@@ -97,7 +98,7 @@ namespace Program
 
             Product selectedProduct = storeProducts[choice - 1];
             Console.WriteLine($">>>>> Izabrali ste proizvod: ");
-            Console.WriteLine($"{selectedProduct.Name} - {selectedProduct.Price} EUR | {selectedProduct.Quantity}");
+            Console.WriteLine($"{selectedProduct.Name} - {selectedProduct.Price} € | {selectedProduct.Quantity}");
 
             Console.WriteLine("***********************************");
             Console.Write($"Unesite količinu proizvoda koju želite kupiti: ");
@@ -197,13 +198,13 @@ namespace Program
             Console.WriteLine(">>>>>>>>>> Račun: <<<<<<<<<<");
             Console.WriteLine($"Proizvod: {selectedProduct.Name} Količina: {selectedQuantity}");
             decimal totalWithoutVAT = selectedProduct.Price * selectedQuantity;
-            Console.WriteLine($"Cijena: {selectedProduct.Price} EUR | Iznos: {totalWithoutVAT} EUR");
+            Console.WriteLine($"Cijena: {selectedProduct.Price} € | Iznos: {totalWithoutVAT} €");
             decimal vatPercentage = 0.20m; // PDV je 20%
             decimal vatPrice = totalWithoutVAT * vatPercentage;
-            Console.WriteLine($"PDV ({vatPercentage * 100}%): {vatPrice} EUR");
+            Console.WriteLine($"PDV ({vatPercentage * 100}%): {vatPrice:00} €");
             decimal totalWithVAT = totalWithoutVAT + vatPrice;
             Console.WriteLine("***********************************");
-            Console.WriteLine($"Iznos s PDV-om: {totalWithVAT} EUR");
+            Console.WriteLine($"Iznos s PDV-om: {totalWithVAT:00} €");
             Console.WriteLine("***********************************");
             Console.WriteLine($"Način plaćanja: {selectedProduct.SelectedPaymentMethod.Name}");
             Console.WriteLine($"Način dostave: {selectedProduct.SelectedDeliveryMethod.Name}");
